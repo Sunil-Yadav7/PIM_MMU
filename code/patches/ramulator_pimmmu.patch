@@ -1,0 +1,26 @@
+diff --git a/src/Controller.h b/src/Controller.h
+index 885f950..5fb1eac 100644
+--- a/src/Controller.h
++++ b/src/Controller.h
+@@ -463,7 +463,7 @@ public:
+ 
+         if (req->type == Request::Type::WRITE) {
+             channel->update_serving_requests(req->addr_vec.data(), -1, clk);
+-            // req->callback(*req);
++            req->callback(*req);  // PIM-MMU repro: notify on write issue
+         }
+ 
+         // remove request from queue
+diff --git a/src/Scheduler.h b/src/Scheduler.h
+index a5a14df..c2eef81 100644
+--- a/src/Scheduler.h
++++ b/src/Scheduler.h
+@@ -71,7 +71,7 @@ public:
+ 
+     enum class Type {
+         FCFS, FRFCFS, FRFCFS_Cap, FRFCFS_PriorHit, MAX
+-    } type = Type::FRFCFS_Cap; //Change this line to change scheduling policy
++    } type = Type::FRFCFS; //PIM-MMU repro (paper Table I: FR-FCFS). Change this line to change scheduling policy
+ 
+     long cap = 16; //Change this line to change cap
+ 

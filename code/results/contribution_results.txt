@@ -1,0 +1,46 @@
+CONTRIBUTION RESULTS — Ragged Transfers (Group 14)
+==============================================================
+
+Our extension: variable-length (ragged) descriptors + largest-
+remaining-first (LRF) scheduling + size-aware DPU placement.
+Effective throughput (GB/s) = USEFUL bytes / time (padding not counted).
+512 DPUs, mean 16 KB/DPU, four per-DPU size distributions.
+
+[C1] Effective throughput by size distribution  (DRAM->PIM)
+--------------------------------------------------------------
+               variant     Uniform  LogN s=0.5  LogN s=1.0  R-MAT SpMV
+                SW-pad       15.51        5.02        1.82        0.40
+               MMU-pad       68.74       19.43        7.03        1.54
+               +Ragged       68.74       34.37       19.05        7.20
+           +Ragged+LRF       68.74       35.49       20.35        7.91
+         +Ragged+Place       68.74       58.17       47.49       16.55
+     +Ragged+Place+LRF       68.74       58.87       52.01       16.60
+
+  Gain of full extension (+Ragged+Place+LRF) over padded PIM-MMU (MMU-pad):
+         Uniform:  68.74 ->  68.74  =   1.00x
+      LogN s=0.5:  19.43 ->  58.87  =   3.03x
+      LogN s=1.0:   7.03 ->  52.01  =   7.40x
+      R-MAT SpMV:   1.54 ->  16.60  =  10.79x
+
+
+[C2] LRF in-flight cap sensitivity  (+Ragged+Place+LRF)
+--------------------------------------------------------------
+            distcap    1cap    2cap    4cap    6cap   12cap   32
+      LogN s=1.0    38.4    46.8    51.7    52.0    48.9    39.0
+      R-MAT SpMV    13.8    15.6    16.6    16.6    16.6    13.8
+    (sweet spot: cap 4-6; smaller starves MLP, larger reverts to FIFO)
+
+
+Key findings:
+  - R-MAT/SpMV: 1.54 -> 16.60 GB/s = 10.8x over padded PIM-MMU,
+    reaching the per-DPU bank-bandwidth bound.
+  - LogN s=1.0: 7.0 -> 52.0 GB/s.
+  - Neutral on uniform sizes (no regression): 68.7 GB/s unchanged.
+  - Placement is the dominant lever; LRF adds a few percent on top.
+  - vs padded SOFTWARE path, R-MAT improves ~41x (0.40 -> 16.6 GB/s).
+
+Note on read/write balance for ragged transfers:
+  Reads move only useful bytes, but a write burst covers all 8 DPUs of
+  a bank unit, so pim_wr > dram_rd by the padding ratio (e.g. 2.97x on
+  LogN s=1.0). This is correct, not a bug; placement shrinks the ratio
+  (1.85 -> 1.03 on LogN s=0.5). Verify with scripts/verify_results.py.

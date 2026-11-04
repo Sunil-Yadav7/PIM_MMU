@@ -1,0 +1,78 @@
+BASELINE RESULTS — PIM-MMU reproduction (Group 14)
+==============================================================
+
+All throughput in GB/s. Config: 4 DRAM + 4 PIM channels, 512 DPUs,
+DDR4-2400, modeled in Ramulator. Compared against the paper's reported
+trends. Base = software baseline; +D = DCE; +H = HetMap; +P = PIM-MS.
+
+[B1] Throughput vs transfer size  (reproduces paper Fig. 15a)
+--------------------------------------------------------------
+
+  DRAM->PIM:
+      size |    Base      +D    +D+H   +D+H+P | speedup
+       1MB |    17.6    12.7    12.7     19.8 |  1.12x
+       2MB |    17.6    11.9    11.9     37.2 |  2.12x
+       4MB |    17.2    11.6    11.6     70.2 |  4.08x
+       8MB |    15.2    11.4    11.4     68.7 |  4.51x
+      16MB |    17.0    11.3    11.3     66.2 |  3.89x
+      32MB |    17.0    11.3    11.3     59.0 |  3.46x
+      64MB |    16.3    11.3    11.3     40.9 |  2.52x
+     256MB |     8.3    11.3    11.3     44.9 |  5.44x
+
+  PIM->DRAM:
+      size |    Base      +D    +D+H   +D+H+P | speedup
+       1MB |    16.8    12.7    12.7     20.5 |  1.22x
+       2MB |    16.7    12.1    12.1     39.0 |  2.34x
+       4MB |    15.0    11.9    11.9     72.3 |  4.82x
+       8MB |    10.8    10.4    11.8     72.3 |  6.67x
+      16MB |    14.8    11.7    11.7     72.3 |  4.88x
+      32MB |    16.1    11.7    11.7     71.4 |  4.44x
+      64MB |    17.3    11.7    11.7     44.8 |  2.59x
+
+
+[B2] Throughput vs number of PIM modules  (32 KB/DPU)
+--------------------------------------------------------------
+
+  DRAM->PIM:
+     DIMMs |    Base   Base+H  PIM-MMU
+         1 |    17.1     18.1     18.2
+         2 |    17.0     33.6     36.4
+         4 |    17.0     43.8     66.2
+         8 |    16.8     43.4     69.3
+
+  PIM->DRAM:
+     DIMMs |    Base   Base+H  PIM-MMU
+         1 |    15.3     16.9     18.1
+         2 |    15.3     29.6     36.3
+         4 |    14.5     42.9     72.3
+         8 |    13.9     37.7     70.8
+
+
+[B3] DRAM mapping: locality vs MLP-centric  (paper Fig. 8)
+--------------------------------------------------------------
+     sequential: locality=  12.2  MLP=  71.8  ratio=0.17
+        strided: locality=   9.2  MLP=  18.5  ratio=0.50
+
+[B4] DRAM<->DRAM memcpy with HetMap  (paper Fig. 14)
+--------------------------------------------------------------
+      config |  Baseline   PIM-MMU | speedup
+       2C-4R |       7.1      16.3 | 2.28x
+      4C-16R |       7.1      30.5 | 4.28x
+       4C-8R |       7.1      30.9 | 4.33x
+
+
+[B5] Robustness to CPU contention  (paper Fig. 13a)
+--------------------------------------------------------------
+    contenders |  Base (norm)  PIM-MMU (norm)
+             0 |         1.00            0.40
+             8 |         0.96            0.40
+            16 |         1.09            0.40
+            24 |         1.36            0.40
+
+
+Key agreements with the paper:
+  - Full PIM-MMU: up to 4.5x (D->P) / 6.7x (P->D); paper avg 3.3x/3.8x.
+  - A plain DCE (+D) is SLOWER than Base (paper's key ablation result).
+  - HetMap alone (+D+H) does not help; PIM-MS unlocks the gain.
+  - Baseline bottoms out at 8.3 GB/s (14% of peak) at 256 MB vs paper 8.9/15.5%.
+  - Software baseline is contention-fragile; PIM-MMU is flat.

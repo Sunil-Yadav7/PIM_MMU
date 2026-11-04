@@ -1,0 +1,40 @@
+E1 d2p: PIM-MMU/Base speedup per size {1: np.float64(1.12), 2: np.float64(2.12), 4: np.float64(4.08), 8: np.float64(4.51), 16: np.float64(3.89), 32: np.float64(3.46), 64: np.float64(2.52)} mean=3.10
+   Base        GB/s [17.6, 17.6, 17.2, 15.2, 17.0, 17.0, 16.3]
+   Base+D      GB/s [12.7, 11.9, 11.6, 11.4, 11.3, 11.3, 11.3]
+   Base+D+H    GB/s [12.7, 11.9, 11.6, 11.4, 11.3, 11.3, 11.3]
+   Base+D+H+P  GB/s [19.8, 37.2, 70.2, 68.7, 66.2, 59.0, 40.9]
+   Base+H      GB/s [30.0, 36.4, 40.7, 43.1, 43.5, 45.3, 44.6]
+   Base+D+P    GB/s [17.8, 17.1, 10.9, 4.6, 5.3, 10.3, 10.6]
+E1 p2d: PIM-MMU/Base speedup per size {1: np.float64(1.22), 2: np.float64(2.34), 4: np.float64(4.82), 8: np.float64(6.67), 16: np.float64(4.88), 32: np.float64(4.44), 64: np.float64(2.59)} mean=3.85
+   Base        GB/s [16.8, 16.7, 15.0, 10.8, 14.8, 16.1, 17.3]
+   Base+D      GB/s [12.7, 12.1, 11.9, 10.4, 11.7, 11.7, 11.7]
+   Base+D+H    GB/s [12.7, 12.1, 11.9, 11.8, 11.7, 11.7, 11.7]
+   Base+D+H+P  GB/s [20.5, 39.0, 72.3, 72.3, 72.3, 71.4, 44.8]
+   Base+H      GB/s [29.5, 35.4, 39.9, 42.2, 43.0, 42.8, 43.1]
+   Base+D+P    GB/s [18.1, 17.2, 8.7, 3.8, 4.4, 8.6, 8.8]
+E2 d2p Base        1DIMM=17.1 2DIMM=17.0 4DIMM=17.0 8DIMM=16.8
+E2 d2p Base+H      1DIMM=18.1 2DIMM=33.6 4DIMM=43.8 8DIMM=43.4
+E2 d2p Base+D      1DIMM=11.3 2DIMM=11.3 4DIMM=11.3 8DIMM=11.3
+E2 d2p Base+D+H    1DIMM=11.3 2DIMM=11.3 4DIMM=11.3 8DIMM=11.3
+E2 d2p Base+D+H+P  1DIMM=18.2 2DIMM=36.4 4DIMM=66.2 8DIMM=69.3
+E2 p2d Base        1DIMM=15.3 2DIMM=15.3 4DIMM=14.5 8DIMM=13.9
+E2 p2d Base+H      1DIMM=16.9 2DIMM=29.6 4DIMM=42.9 8DIMM=37.7
+E2 p2d Base+D      1DIMM=11.6 2DIMM=11.7 4DIMM=11.7 8DIMM=11.7
+E2 p2d Base+D+H    1DIMM=11.6 2DIMM=11.7 4DIMM=11.7 8DIMM=11.7
+E2 p2d Base+D+H+P  1DIMM=18.1 2DIMM=36.3 4DIMM=72.3 8DIMM=70.8
+E3 loc-s1=12.2GB/s mlp-s1=71.8GB/s loc-s16=9.2GB/s mlp-s16=18.5GB/s
+E4 2C4R:2.28x 4C8R:4.33x 4C16R:4.28x
+E5 Base norm latency 0:1.00 8:0.96 16:1.09 24:1.36
+E5 PIM-MMU norm latency 0:0.40 8:0.40 16:0.40 24:0.40
+E6 Base: mean per-window coefficient of variation across channels = 0.33
+E6 Base_H: mean per-window coefficient of variation across channels = 0.39
+E6 Base_D_H_P: mean per-window coefficient of variation across channels = 0.00
+E7 loc-inter=16.2 loc-rand=17.1 loc-seq=17.2 mlp-inter=46.6 mlp-rand=44.5 mlp-seq=18.1
+E8 d2p uniform      SW-pad=15.51 MMU-pad=68.74 +Ragged=68.74 +Ragged+LRF=68.74 +Ragged+Place=68.74 +Ragged+Place+LRF=68.74
+E8 d2p lognorm-0.5  SW-pad=5.02 MMU-pad=19.43 +Ragged=34.37 +Ragged+LRF=35.49 +Ragged+Place=58.17 +Ragged+Place+LRF=58.87
+E8 d2p lognorm-1.0  SW-pad=1.82 MMU-pad=7.03 +Ragged=19.05 +Ragged+LRF=20.35 +Ragged+Place=47.49 +Ragged+Place+LRF=52.01
+E8 d2p rmat         SW-pad=0.40 MMU-pad=1.54 +Ragged=7.20 +Ragged+LRF=7.91 +Ragged+Place=16.55 +Ragged+Place+LRF=16.60
+E8 p2d uniform      MMU-pad=72.28 +Ragged=72.28 +Ragged+LRF=72.28 +Ragged+Place=72.28 +Ragged+Place+LRF=72.28
+E8 p2d lognorm-0.5  MMU-pad=21.23 +Ragged=32.99 +Ragged+LRF=34.37 +Ragged+Place=60.31 +Ragged+Place+LRF=60.69
+E9 lognorm-1.0 cap1=38.4 cap2=46.8 cap4=51.7 cap6=52.0 cap12=48.9 cap32=39.0
+E9 rmat cap1=13.8 cap2=15.6 cap4=16.6 cap6=16.6 cap12=16.6 cap32=13.8
